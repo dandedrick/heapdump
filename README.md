@@ -7,7 +7,7 @@ quickly to solve a problem I was looking at.
 
 Usage:
 ```heapdump.py heap.data 0x12340000```
-heap.data should be the raw memory at the location of the heap. The can be done
+heap.data should be the raw memory at the location of the heap. This can be done
 in gdb by using the ```dump binary memory``` command.
 
 The 0x12340000 is an option offset which will be added the the formatted
