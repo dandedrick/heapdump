@@ -13,7 +13,7 @@ in gdb by using the ```dump binary memory``` command.
 The `--word-size` option specifies the word size of the architecture that the
 dump comes from. For 64 bit this should be 8 and for 32 bit this should be 4.
 
-The ``adjustment` option is an optional offset which will be added to the
+The `adjustment` option is an optional offset which will be added to the
 formatted addresses. Without this the addresses printed will start at 0. This
 is useful for referencing the address of memory for a particular allocation
 instead of the relative address from the start of the heap.
