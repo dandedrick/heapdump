@@ -2,6 +2,7 @@
 import argparse
 import struct
 
+
 def extract_file(filename, adjustment, word_size=8):
     match word_size:
         case 4:
@@ -23,33 +24,37 @@ def extract_file(filename, adjustment, word_size=8):
         count = value & (~0x3)
         count -= word_size
         if allocated:
-            print('\nAllocation at {:08x}\nSize: {}\nData:'.format(data.tell() + adjustment, count))
+            offset = data.tell() + adjustment
+            print(f'\nAllocation at {offset:08x}\nSize: {count}\nData:')
             decoded = ""
             while count > 0:
                 raw_data = data.read(word_size)
                 if len(raw_data) < word_size:
                     return
                 value = struct.unpack(unpack_format, raw_data)[0]
-                print('{:016x}: {:016x}'.format(data.tell() - word_size + adjustment, value))
+                offset = data.tell() - word_size + adjustment
+                print(f'{offset:016x}: {value:016x}')
                 decoded = decoded + raw_data.decode('ascii', 'ignore')
                 count = count - word_size
             print("String: {}".format(decoded))
         else:
             offset = data.tell() + adjustment
+            print(f'\nFree at {offset:08x}. {count} bytes')
             data.seek(count, 1)
-            print('\nFree at {:08x}. {} bytes'.format(data.tell() + adjustment, count))
             while count > 0:
-                print("{:08x}: Free".format(offset))
+                print(f"{offset:08x}: Free")
                 offset += word_size
-                count = count - word_size;
+                count = count - word_size
         raw_data = data.read(word_size)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
             prog='Heapdump',
             description='Dump formatted heap information')
     parser.add_argument('filename')
-    parser.add_argument('-a', '--adjustment', type=lambda x: int(x, 0), default=0)
+    parser.add_argument('-a', '--adjustment', type=lambda x: int(x, 0),
+                        default=0)
     parser.add_argument('-w', '--word-size', type=int, default=8)
     args = parser.parse_args()
 
